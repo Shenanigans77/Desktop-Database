@@ -51,13 +51,13 @@ class Connector:
             pass
         
 
-    def update(self,table,title,author,isbn,year):
+    def update(self,id,title,author,isbn,year):
         try:
             title = str(title)
             author = str(author)
             isbn = int(isbn)
             year = int(year)
-            command = "UPDATE ? SET ", (self.table,title,author,isbn,year)
+            command = "UPDATE ? SET title=?, author=?, year=?, isbn=? WHERE id=?", (self.table,title,author,isbn,year,id)
             return self.generic_connector(command)
         except ValueError:
             pass

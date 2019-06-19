@@ -1,34 +1,46 @@
 import tkinter
 import backend
 
-link = backend.Connector("books.db")
+def get_selected_row(event):
+    global selected_tuple
+    index=list1.curselection()
+    selected_tuple = list1.get(index)
+    print(selected_tuple)
+    e1.delete(0,tkinter.END)
+    e1.insert(tkinter.END,selected_tuple[1])
+    e2.delete(0,tkinter.END)
+    e2.insert(tkinter.END,selected_tuple[2])
+    e3.delete(0,tkinter.END)
+    e3.insert(tkinter.END,selected_tuple[3])
+    e4.delete(0,tkinter.END)
+    e4.insert(tkinter.END,selected_tuple[4])
+    
 
 def view_command():
     list1.delete(0,tkinter.END)
-    for row in link.view():
+    for row in backend.view():
         list1.insert(tkinter.END,row) 
 
 def search_command():
     list1.delete(0,tkinter.END)
-    for row in link.search(title_text.get(),author_text.get(),year_text.get(),isbn_text.get()):
+    for row in backend.search(title_text.get(),author_text.get(),year_text.get(),isbn_text.get()):
         list1.insert(tkinter.END,row)
 
 def add_command():
-    link.insert(title_text.get(),author_text.get(),year_text.get(),isbn_text.get())
+    backend.insert(title_text.get(),author_text.get(),year_text.get(),isbn_text.get())
     list1.delete(0,tkinter.END)
-    list1.insert(tkinter.END,title_text.get(),author_text.get(),year_text.get(),isbn_text.get())
+    list1.insert(tkinter.END,(title_text.get(),author_text.get(),year_text.get(),isbn_text.get()))
 
 def update_command():
-    pass
+    backend.update(selected_tuple[0],title_text.get(),author_text.get(),year_text.get(),isbn_text.get())
+    view_command()
 
 def delete_command():
-    pass
-
-def close_command():
-    pass
-
+    backend.delete(selected_tuple[0])
+    view_command()
 
 window=tkinter.Tk()
+window.wm_title("Book Store")
 
 l1=tkinter.Label(window,text="Title")
 l1.grid(row=0,column=0)
@@ -66,6 +78,8 @@ scroll_bar_1.grid(row=2,column=2)
 list1.configure(yscrollcommand=scroll_bar_1.set)
 scroll_bar_1.configure(command=list1.yview)
 
+list1.bind('<<ListboxSelect>>',get_selected_row)
+
 button_1=tkinter.Button(window,text="View all",width=12,command=view_command)
 button_1.grid(row=2,column=3)
 
@@ -75,13 +89,13 @@ button_2.grid(row=3,column=3)
 button_3=tkinter.Button(window,text="Add entry",width=12,command=add_command)
 button_3.grid(row=4,column=3)
 
-button_4=tkinter.Button(window,text="Update",width=12,command=update_command)
+button_4=tkinter.Button(window,text="Update selected",width=12,command=update_command)
 button_4.grid(row=5,column=3)
 
-button_5=tkinter.Button(window,text="Delete",width=12,command=delete_command)
+button_5=tkinter.Button(window,text="Delete selected",width=12,command=delete_command)
 button_5.grid(row=6,column=3)
 
-button_6=tkinter.Button(window,text="Close",width=12,command=close_command)
+button_6=tkinter.Button(window,text="Close",width=12,command=window.destroy)
 button_6.grid(row=7,column=3)
 
 

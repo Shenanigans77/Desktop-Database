@@ -38,7 +38,7 @@ def delete(id):
         print("oops")
     
 
-def update(id,title,author,isbn,year):
+def update(id,title,author,year,isbn):
     try:
         conn = sqlite3.connect("books.db")
         cur = conn.cursor()
@@ -77,9 +77,3 @@ def search(title="",author="",year="",isbn=""):
         return rows
     except (ValueError, SyntaxError):
         print("oops")
-    
-#create()
-#insert("Clean Code in Python","Mariano Anaya", 2018, 1788835832) 
-
-#search("Clean Code")   
-#sprint(view())
